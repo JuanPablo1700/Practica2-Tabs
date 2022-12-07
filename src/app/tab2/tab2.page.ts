@@ -1,3 +1,4 @@
+import { Tasks } from './../models/tasks';
 import { Component } from '@angular/core';
 import { TaskService } from './../services/task.service';
 
@@ -8,22 +9,23 @@ import { TaskService } from './../services/task.service';
 })
 export class Tab2Page {
 
-  public tasksComplete: string[];
+  public tasksComplete: Tasks[];
 
   constructor(
     private taskService:TaskService
   ) {
-    this.tasksComplete = this.taskService.getCompleteTasks();
+    this.taskService.getCompleteTasks().subscribe(res => {
+      this.tasksComplete = res;
+    });
   }
 
-  public removeCompleteTask(pos:number) {
-    this.taskService.removeCompleteTask(pos);
-    this.tasksComplete = this.taskService.getCompleteTasks();
+  public removeCompleteTask(id: string) {
+    this.taskService.removeTask(id);
   }
 
-  public uncompleteTask(pos:number) {
-    this.taskService.uncompleteTask(pos);
-    this.tasksComplete = this.taskService.getCompleteTasks();
+  public uncompleteTask(id: string) {
+    this.taskService.uncompleteTask(id);
+    //this.tasksComplete = this.taskService.getCompleteTasks();
   }
 
 }

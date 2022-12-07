@@ -1,3 +1,4 @@
+import { Tasks } from './../models/tasks';
 import { Component } from '@angular/core';
 import { TaskService } from '../services/task.service';
 
@@ -8,40 +9,42 @@ import { TaskService } from '../services/task.service';
 })
 export class Tab1Page {
   
-  public tasks: string[];
-  public task: string;
+  public tasks: Tasks[];
+  public task: Tasks;
 
   constructor(
     private taskService:TaskService
   ) {
-    this.tasks = this.taskService.getTasks();
-    this.task = "";
+    this.taskService.getTasks().subscribe(res => {
+      this.tasks = res;
+    });
+    this.task = {
+      name: '',
+      complete: false
+    };
   }
 
   public addTask(e){
-    if(e.keyCode === 13 && this.task != "" ){
+    if(e.keyCode === 13 && this.task.name != "" ){
+      this.task.complete = false;
       this.taskService.addTask(this.task);
-      this.tasks = this.taskService.getTasks();
-      console.log(this.tasks);
-      this.task = "";
+      this.task.name = "";
     }
   }
 
   public addTaskButton(){
     this.taskService.addTask(this.task);
-    this.tasks = this.taskService.getTasks();
-    console.log(this.tasks);
-    this.task = "";
+    this.task.name = "";
   }
 
-  public removeTask(pos:number) {
-    this.taskService.removeTask(pos);
-    this.tasks = this.taskService.getTasks();
+  public removeTask(id: string) {
+    this.taskService.removeTask(id);
+    //this.tasks = this.taskService.getTasks();
   }
 
-  public completeTask(pos:number) {
-    this.taskService.completeTask(pos);
-    this.tasks = this.taskService.getTasks();
+  public completeTask(id:string) {
+    this.taskService.completeTask(id);
+    //this.tasks = this.taskService.getTasks();
   }
 
 }
